@@ -1,4 +1,4 @@
-# Muscle-In
+# Muscle-In (Russian only)
 
 ## Мужики при делах!
 ![](https://github.com/loooltooot/muscle-in/blob/master/assets/Screenshot_20220313-131437.png)
