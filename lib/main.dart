@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gigamusculerator/res/bloc/man_bloc.dart';
 import 'package:gigamusculerator/res/screens/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,14 +15,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Colors
-        colorSchemeSeed: Color(0xFF4C4C4C),
+        colorSchemeSeed: const Color(0xFF4C4C4C),
         brightness: Brightness.dark,
         useMaterial3: true,
 
         // Other
         fontFamily: GoogleFonts.montserrat().fontFamily
       ),
-      home: HomeScreen(),
+      home: BlocProvider(
+        create: (_) => ManBloc(),
+        child: const HomeScreen(),
+      ),
     );
   }
 }

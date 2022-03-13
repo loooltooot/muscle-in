@@ -1,7 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:gigamusculerator/res/widgets/man_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/man_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    Bloc _bloc = context.read<ManBloc>();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF151515),
@@ -24,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 colors: [Color(0xFF151515), Colors.transparent],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                stops: [0.01, 0.6],
+                stops: [0.0, 0.6],
                 tileMode: TileMode.clamp,
               ).createShader(bounds);
             },
@@ -48,6 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
+                    onChanged: (value) {
+                      if(value.trim() != '') {
+                        _bloc.add(ManManificate(value.trim()));
+                      }
+                    },
                     decoration: InputDecoration(
                       hintText: 'Мужчинизировать',
                       enabledBorder: OutlineInputBorder(
@@ -69,17 +78,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Padding(
                     padding: EdgeInsets.only(top: 25)
                   ),
-                  Wrap(
-                    spacing: 15,
-                    runSpacing: 10,
-                    children: [
-                      ManCard('dsdsads'),
-                      ManCard('werqw'),
-                      ManCard('dsdsads'),
-                      ManCard('werqw'),
-                      ManCard('dsdsads'),
-                      ManCard('werqw')
-                    ],
+                  BlocBuilder<ManBloc, ManState>(
+                    builder: (_, state) {
+                      if(state is ManLoading) {
+                        return const ManCard('Мужики, ожидаем');
+                      }
+
+                      if(state is ManEnded) {
+                        return Wrap(
+                          spacing: 9,
+                          runSpacing: 10,
+                          children: state.words.map((e) => ManCard(e)).toList(),
+                        );
+                      }
+
+                      return const ManCard('Мужики, авария');
+                    },
                   )
                 ],
               ),
